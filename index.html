@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masai Doctor Records</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        form {
+            width: 40%;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            padding: 40px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 50%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table td,
+        table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #8caacf;
+        }
+
+        table tr:hover {
+            background-color: #ddd;
+        }
+
+        table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #0468aa;
+            color: white;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 2%;
+        }
+
+        input[type="text"],
+        select,
+        textarea,
+        input[type="number"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            resize: vertical;
+        }
+
+        input[type="submit"] {
+            background-color: #2b619e;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #3973b6;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 50px;
+            text-transform: uppercase;
+            font-family: serif;
+            color: #2b619e;
+            text-decoration: underline;
+        }
+
+        #tableBody button {
+            background-color: #ff4d4d;
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        #tableBody button:hover {
+            background-color: #e60000;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>HOSPITAL - DOCTOR RECORDS</h1>
+    <div class="container">
+        <!-- Use this form for data input  -->
+        <form id="doctorForm">
+            <label for="name">Doctor Name</label>
+            <input type="text" id="name" placeholder="Name" required>
+
+            <label for="doctor_id">Doctor ID</label>
+            <input type="text" id="doctor_id" placeholder="Doctor ID" required>
+
+            <label for="specialization">Specialization</label>
+            <select id="specialization" required>
+                <option value="">Select Specialization</option>
+                <option value="Dermatologist">Dermatologist</option>
+                <option value="Dentist">Dentist</option>
+                <option value="Gynecologist">Gynecologist</option>
+            </select>
+
+            <label for="experience">Experience</label>
+            <input type="number" id="experience" placeholder="Experience" required>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="Email" required>
+
+            <label for="mobile">Mobile Number</label>
+            <input type="number" id="mobile" placeholder="Mobile No." required>
+
+            <input type="submit" value="Submit">
+        </form>
+
+        <!-- Use this Select tag for filter part  -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Doctor ID</th>
+                    <th>Specialization</th>
+                    <th>Experience in Years</th>
+                    <th>Email Address</th>
+                    <th>Mobile No</th>
+                    <th>Role</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody">
+                <!-- Table rows will be added dynamically using JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('doctorForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            
+            var name = document.getElementById('name').value;
+            var doctorId = document.getElementById('doctor_id').value;
+            var specialization = document.getElementById('specialization').value;
+            var experience = document.getElementById('experience').value;
+            var email = document.getElementById('email').value;
+            var mobile = document.getElementById('mobile').value;
+
+            
+            var tableBody = document.getElementById('tableBody');
+            var newRow = tableBody.insertRow(tableBody.rows.length);
+            var cells = [];
+
+            for (var i = 0; i < 8; i++) {
+                cells[i] = newRow.insertCell(i);
+            }
+
+            
+            cells[0].innerText = name;
+            cells[1].innerText = doctorId;
+            cells[2].innerText = specialization;
+            cells[3].innerText = experience;
+            cells[4].innerText = email;
+            cells[5].innerText = mobile;
+
+            
+            var role = determineRole(experience);
+            cells[6].innerText = role;
+
+          
+            cells[7].innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
+        });
+
+        // this code is for Role and Delete buttons
+        document.getElementById('tableBody').addEventListener('click', function (event) {
+            if (event.target.tagName === 'BUTTON') {
+                if (event.target.textContent === 'Delete') {
+                    deleteRow(event.target);
+                }
+            }
+        });
+
+        function determineRole(experience) {
+            if (experience >= 6) {
+                return 'Senior';
+            } else if (experience >= 3) {
+                return 'Junior';
+            } else if (experience >= 1) {
+                return 'Trainee';
+            } else {
+                return 'Unknown';
+            }
+        }
+
+        function deleteRow(button) {
+            // Delete the on clicking the delete button
+            var row = button.closest('tr');
+            row.parentNode.removeChild(row);
+        }
+    </script>
+</body>
+
+</html>
